@@ -10,7 +10,6 @@ function OrderDropDown({
 }) {
   const onSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     const id = parseInt(e.target.value)
-    console.log({ id })
     if (id) setSelectedItem(id)
   }
 
@@ -20,7 +19,7 @@ function OrderDropDown({
         Item:
         <select id="items" onChange={onSelect}>
           {items.map((item) => (
-            <option value={item.id}>
+            <option value={item.id} key={item.id}>
               {item.name} - ${item.price}
             </option>
           ))}

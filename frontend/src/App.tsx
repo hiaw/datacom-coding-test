@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
 import "./App.css"
-import type { Item } from "./type/item"
+import type { Item, Order } from "./type/item"
 import OrderDropDown from "./components/OrderDropDown"
 
 const items: Item[] = [
@@ -13,6 +13,22 @@ const items: Item[] = [
 function App() {
   const [customerName, setCustomerName] = useState("")
   const [selectedItemId, setSelectedItemId] = useState(1)
+
+  const [orders, setOrders] = useState<Order[]>([])
+
+  useEffect(() => {
+    const getOrder = async () => {
+      const orderResponse = await fetch("http://localhost:3000/order")
+      const orderJson = await orderResponse.json()
+      if (orderJson) {
+        setOrders(orderJson)
+      }
+    }
+
+    const interval = setInterval(getOrder, 500)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const onTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (setCustomerName) {
@@ -37,7 +53,9 @@ function App() {
           customerName,
         }),
       })
-      console.log(response)
+      if (!response.ok) {
+        console.error(response.body)
+      }
     } else {
       console.error("Invalid item selected")
     }
@@ -51,6 +69,13 @@ function App() {
       </div>
       <OrderDropDown items={items} setSelectedItemId={setSelectedItemId} />
       <button onClick={onSubmit}>Submit</button>
+      <div>
+        {orders.map((order) => (
+          <div key={`${order.customerName}-${order.id}-${Math.random()}`}>
+            {order.customerName} {order.name} {order.price} {order.status}
+          </div>
+        ))}
+      </div>
     </>
   )
 }
