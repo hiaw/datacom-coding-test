@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, type ChangeEvent } from "react"
+import "./App.css"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [customerName, setCustomerName] = useState("")
+
+  const onTextChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (setCustomerName) {
+      const newValue = e.target?.value
+      setCustomerName(newValue)
+    }
+  }
+
+  const onSubmit = async () => {
+    const response = await fetch("http://localhost:3000/order", {
+      method: "POST",
+      body: JSON.stringify({
+        id: 1,
+        name: "Laptop",
+        price: 999,
+        customerName,
+      }),
+    })
+
+    console.log(response)
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <label htmlFor="customerName">Customer Name: </label>
+        <input onChange={onTextChange} id="customerName" />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={onSubmit}>Submit</button>
     </>
   )
 }

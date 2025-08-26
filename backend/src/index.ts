@@ -1,17 +1,21 @@
 import { serve } from "@hono/node-server"
 import { Hono } from "hono"
 import { HTTPException } from "hono/http-exception"
-
-const app = new Hono()
+import { cors } from "hono/cors"
 
 interface Order {
   status: "Pending" | "Processing" | "Completed"
   id: number
   name: string
   price: number
+  customerName: string
 }
 
 const orders: Order[] = []
+
+const app = new Hono()
+
+app.use("/order", cors())
 
 app.get("/order", (c) => {
   return c.json(orders)
@@ -19,7 +23,7 @@ app.get("/order", (c) => {
 
 app.post("/order", async (c) => {
   const order: Order = await c.req.json()
-  if (order && order.id && order.name && order.price) {
+  if (order && order.id && order.name && order.price && order.customerName) {
     order.status = "Pending"
     orders.push(order)
   } else {
