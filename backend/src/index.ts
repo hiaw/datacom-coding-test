@@ -5,7 +5,8 @@ import { cors } from "hono/cors"
 
 interface Order {
   status: "Pending" | "Processing" | "Completed"
-  id: number
+  orderId: string
+  itemId: number
   name: string
   price: number
   customerName: string
@@ -23,8 +24,15 @@ app.get("/order", (c) => {
 
 app.post("/order", async (c) => {
   const order: Order = await c.req.json()
-  if (order && order.id && order.name && order.price && order.customerName) {
+  if (
+    order &&
+    order.itemId &&
+    order.name &&
+    order.price &&
+    order.customerName
+  ) {
     order.status = "Pending"
+    order.orderId = (Math.random() * 1e8).toFixed(0).toString()
     orders.push(order)
   } else {
     throw new HTTPException(401, { message: "Invalid order" })
@@ -35,7 +43,7 @@ app.post("/order", async (c) => {
 
     setTimeout(() => {
       order.status = "Completed"
-    }, 6000)
+    }, 8000)
   }, 2000)
 
   return c.json(order)

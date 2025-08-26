@@ -48,7 +48,9 @@ function App() {
       const response = await fetch("http://localhost:3000/order", {
         method: "POST",
         body: JSON.stringify({
-          ...selectedItem,
+          itemId: selectedItem.id,
+          name: selectedItem.name,
+          price: selectedItem.price,
           customerName,
         }),
       })
@@ -84,10 +86,9 @@ function App() {
           {orders.map((order) => (
             <div
               className="my-2"
-              key={`${order.customerName}-${order.id}-${Math.random()}`}
+              key={`${order.orderId}-${order.customerName}-${Math.random()}`}
             >
-              {order.customerName}: {order.name} - ${order.price} (
-              {order.status})
+              Order {order.orderId}: {order.customerName} ({order.status})
             </div>
           ))}
         </div>
