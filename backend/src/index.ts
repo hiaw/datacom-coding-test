@@ -26,6 +26,14 @@ app.post("/order", async (c) => {
     throw new HTTPException(401, { message: "Invalid order" })
   }
 
+  setTimeout(() => {
+    order.status = "Processing"
+
+    setTimeout(() => {
+      order.status = "Completed"
+    }, 6000)
+  }, 2000)
+
   return c.json(order)
 })
 
