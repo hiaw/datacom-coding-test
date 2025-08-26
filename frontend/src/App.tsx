@@ -1,5 +1,4 @@
 import { useEffect, useState, type ChangeEvent } from "react"
-import "./App.css"
 import type { Item, Order } from "./type/item"
 import OrderDropDown from "./components/OrderDropDown"
 
@@ -62,21 +61,38 @@ function App() {
   }
 
   return (
-    <>
-      <div className="card">
-        <label htmlFor="customerName">Customer Name: </label>
-        <input onChange={onTextChange} id="customerName" />
+    <div className="bg-blue-100 min-h-screen place-items-center">
+      <div className="max-w-lg bg-blue-200 min-h-screen w-full p-4">
+        <h1 className="text-3xl font-bold">Item Order Form</h1>
+        <div className="pt-4 pb-2">
+          <label htmlFor="customerName">Customer Name: </label>
+          <input
+            className="bg-white outline-1 pl-2"
+            onChange={onTextChange}
+            id="customerName"
+          />
+        </div>
+        <OrderDropDown items={items} setSelectedItemId={setSelectedItemId} />
+        <button
+          className="py-2 px-4 my-2 rounded-full bg-blue-950 text-white "
+          onClick={onSubmit}
+        >
+          Submit
+        </button>
+        <h1 className="text-3xl font-bold pt-6">Orders</h1>
+        <div>
+          {orders.map((order) => (
+            <div
+              className="my-2"
+              key={`${order.customerName}-${order.id}-${Math.random()}`}
+            >
+              {order.customerName}: {order.name} - ${order.price} (
+              {order.status})
+            </div>
+          ))}
+        </div>
       </div>
-      <OrderDropDown items={items} setSelectedItemId={setSelectedItemId} />
-      <button onClick={onSubmit}>Submit</button>
-      <div>
-        {orders.map((order) => (
-          <div key={`${order.customerName}-${order.id}-${Math.random()}`}>
-            {order.customerName} {order.name} {order.price} {order.status}
-          </div>
-        ))}
-      </div>
-    </>
+    </div>
   )
 }
 

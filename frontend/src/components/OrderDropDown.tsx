@@ -17,7 +17,11 @@ function OrderDropDown({
     <div>
       <label htmlFor="items">
         Item:
-        <select id="items" onChange={onSelect}>
+        <select
+          className="bg-white mx-2 outline-1"
+          id="items"
+          onChange={onSelect}
+        >
           {items.map((item) => (
             <option value={item.id} key={item.id}>
               {item.name} - ${item.price}
